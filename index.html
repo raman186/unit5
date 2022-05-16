@@ -1,28 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food App</title>
+    <style>
+    
+        #container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        #display{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            width: 90%;
+            gap: 5%;
+            margin: auto;
+        }
+        img{
+            width: 100%;
+            height: 90%;
+            border-radius: 8px;
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home</title>
-        <link rel="stylesheet" href="styles\index.css">
-    </head>
+        }
+        select{
+            align-items: center;
+            margin-bottom: 40px;
 
-    <body>
-        <div id="slideshow">
-            <!--Show Slideshow here-->
+        }
+        #card{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="conatiner">
+        <select id="select_category">
+            <option value="0">Select Category</option>
+        </select>
+        <button onclick="getData()">Seach</button>
+        <div id="display"></div>
+    </div>
+</body>
+<script>
+    console.log("Food App")
 
-        </div>
+    let conatiner=document.getElementById("container");
+    let select=document.getElementById('select_category');
+    let display=document.getElementById("display");
+    async function fetchData(){
+        let res= await fetch(`https://www.themealdb.com/api/json/v1/1/categories.php`);
+        let data= await res.json();
+        let food_items=data.categories;
+        food_items.forEach((item) => {
+            let opt=document.createElement('option');
+            opt.value=item.strCategory;
+            opt.innerHTML=item.strCategory;
+            select.appendChild(opt)
+        });
+    }
+    fetchData()
 
-        <div id="sort-buttons">
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
-            <a href="signup.html">Signup</a>
-        </div>
-        <div id="movies">
-            <!--Show list of movies here-->
-        </div>
-    </body>
-<script src="scripts\index.js"></script>
+    async function getData(){        
+        let res =await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${select.value}`);
+        let data=await res.json();
+        let items=data.meals;
+
+        items.forEach((item)=>{
+            let food_card=document.createElement('div');
+            food_card.setAttribute('id','card')
+            let image=document.createElement('img');
+            image.src=item.strMealThumb;
+            let des=document.createElement('h3')
+            des.innerText=item.strMeal;
+
+            food_card.append(image,des)
+            display.append(food_card)
+        })
+       
+    }
+
+
+
+
+
+
+</script>
 </html>
