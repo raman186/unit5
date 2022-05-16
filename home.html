@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+         #nav{
+            background-color:blueviolet;
+            padding: 6px;
+            margin-top: 10px;
+            margin: auto;
+            padding-left: 10px 6px 10px 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        *{
+            text-align: center;
+            margin: auto;
+        }
+        th,td{
+            padding: 5px;
+            border: 1px solid #ddd;
+
+        }
+        #allBrewery{
+            margin: auto;
+            width: 90%;
+             margin-top: 40px;
+
+        }
+        a{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="nav">
+        <button onclick="home()">Home</button>
+        <button onclick="search()">Search</button>
+    </div>
+    <div id="container">
+        <table id="allBrewery">
+            <tr>
+                <th>Name of Brewery</th>
+                <th>Type</th>
+                <th>City</th>
+                <th>State</th>
+                <th>More Info</th>
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+    function home(){
+        window.location="home.html"
+    }
+    function search(){
+        window.location="search.html"
+    }
+
+    console.log("home")
+    let container= document.getElementById("container");
+    let table=document.getElementById('allBrewery');
+    async function fetchData(){
+        let res=await fetch(`https://api.openbrewerydb.org/breweries?per_page=20`);
+        let data= await res.json();
+        let breweryData;
+        if(localStorage.getItem('breweryData')===null){
+            breweryData=[]
+        }
+        else
+        breweryData=JSON.parse(localStorage.getItem('breweryData'));
+
+        data.forEach((item) => {
+            let tr=document.getElementById('allBrewery').insertRow(1)
+            let name=tr.insertCell(0)
+            name.innerHTML=item.name;
+            let type=tr.insertCell(1)
+            type.innerHTML=item.brewery_type;
+            let city=tr.insertCell(2)
+            city.innerHTML=item.city;
+            let state=tr.insertCell(3)
+            state.innerHTML=item.state;
+            let more=document.createElement('a')
+            more.innerHTML="Click Here";
+            // more.addEventListener('click',function(){
+            //     var breweryObj={
+                    
+            //     }
+            //     console.log(breweryObj)
+            //     breweryData.push(breweryObj)
+            //     localStorage.setItem('breweryData',JSON.stringify(breweryData))
+            // })
+            tr.insertCell(4).append(more);
+            
+           
+        });
+    }
+    fetchData();
+   
+
+
+
+
+
+    /*
+        address_2: null
+        address_3: null
+        brewery_type: "planning"
+        city: "Fayetteville"
+        country: "United States"
+        county_province: null
+        created_at: "2021-10-23T02:24:55.243Z"
+        id: "banjo-brewing-fayetteville"
+        latitude: null
+        longitude: null
+        name: "Banjo Brewing"
+        phone: "3042164231"
+        postal_code: "25840"
+        state: "West Virginia"
+*/
+</script>
+</html>
